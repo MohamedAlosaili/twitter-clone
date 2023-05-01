@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
 const UserSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "Add a name"],
+      required: [true, "Name can't be blank"],
       maxlength: [50, "Your name must be shorter than 50 characters"],
       minlength: [1, "Your name must be longer than 1 characters"],
       trim: true,
@@ -34,6 +35,13 @@ const UserSchema = new mongoose.Schema(
       lowercase: true,
       trim: true,
     },
+    password: {
+      type: String,
+      required: [true, "Password can't be blank"],
+      minlength: [8, "Your password must be longer than 8 characters"],
+      maxlength: [32, "Your password must be shorter than 32 characters"],
+      select: false,
+    },
     avatar: String,
     headerImage: String,
     bio: {
@@ -58,5 +66,17 @@ const UserSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// Hash password before save it
+UserSchema.pre("save", async function (next) {
+  const hashedPassword = await bcrypt.hash(this.password, 10);
+
+  this.password = hashedPassword;
+});
+
+// Check if password matches
+UserSchema.methods.matchPassword = async function (enteredPassword) {
+  return await bcrypt.compare(enteredPassword, this.password);
+};
 
 export default mongoose.model("User", UserSchema);
