@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
 
 const UserSchema = new mongoose.Schema(
   {
@@ -13,10 +14,9 @@ const UserSchema = new mongoose.Schema(
     },
     username: {
       type: String,
-      unique: [true, "Username has been taken. Please choose another"],
-      required: [true, "Username can't be blank"],
+      unique: true,
       maxlength: [15, "Your username must be shorter than 15 characters"],
-      minlength: [4, "Your username must be longer than 4 characters"],
+      minlength: [1, "Your username must be longer than 1 character"],
       trim: true,
       lowercase: true,
       match: [
@@ -67,6 +67,15 @@ const UserSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+// Extract username from email if not provided
+UserSchema.pre("save", function (next) {
+  if (this.username) return next();
+
+  const username = this.email.split("@")[0];
+  this.username = username;
+  next();
+});
+
 // Hash password before save it
 UserSchema.pre("save", async function (next) {
   const hashedPassword = await bcrypt.hash(this.password, 10);
@@ -77,6 +86,13 @@ UserSchema.pre("save", async function (next) {
 // Check if password matches
 UserSchema.methods.matchPassword = async function (enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
+};
+
+// Generate and return JWT token
+UserSchema.methods.getSignedJwtToken = function () {
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRE,
+  });
 };
 
 export default mongoose.model("User", UserSchema);
