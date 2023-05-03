@@ -3,7 +3,14 @@ import passport from "passport";
 
 const router = express.Router();
 
-import { getMe, logOut, login, signup } from "../controllers/auth.js";
+import {
+  forgotPassword,
+  getMe,
+  logOut,
+  login,
+  resetPassword,
+  signup,
+} from "../controllers/auth.js";
 
 router.post("/signup", signup);
 
@@ -27,5 +34,9 @@ router.get(
 router.post("/logout", logOut);
 
 router.get("/me", getMe);
+
+router.post("/forgotpassword", forgotPassword);
+
+router.post("/resetpassword", resetPassword);
 
 export default router;
