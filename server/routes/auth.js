@@ -12,6 +12,8 @@ import {
   signup,
 } from "../controllers/auth.js";
 
+import protect from "../middlewares/protect.js";
+
 router.post("/signup", signup);
 
 router.post("/login", login);
@@ -33,7 +35,7 @@ router.get(
 
 router.post("/logout", logOut);
 
-router.get("/me", getMe);
+router.get("/me", protect, getMe);
 
 router.post("/forgotpassword", forgotPassword);
 
