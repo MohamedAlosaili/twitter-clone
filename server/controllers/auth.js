@@ -1,9 +1,10 @@
 import asyncHandler from "../middlewares/asyncHandler.js";
 import User from "../models/User.js";
 import ErrorResponse from "../utils/errorResponse.js";
+import { sendResetPasswordCode } from "../utils/sendEmail.js";
 
 // @desc    Signup user
-// @route   POST /api/v1/auth/signup
+// @route   POST /api/auth/signup
 // access   Public
 export const signup = asyncHandler(async (req, res, next) => {
   const user = await User.create(req.body);
@@ -12,7 +13,7 @@ export const signup = asyncHandler(async (req, res, next) => {
 });
 
 // @desc    Login user
-// @route   POST /api/v1/auth/login
+// @route   POST /api/auth/login
 // access   Public
 export const login = asyncHandler(async (req, res, next) => {
   let user;
@@ -66,7 +67,7 @@ function sendTokenAndCookie(user, statusCode, res) {
 }
 
 // @desc    Signup user
-// @route   POST /api/v1/auth/signup
+// @route   POST /api/auth/forgotpassword
 // access   Public
 export const logOut = asyncHandler(async (req, res, next) => {
   res.cookie("token", "none", { expires: new Date(Date.now()) });
@@ -75,5 +76,62 @@ export const logOut = asyncHandler(async (req, res, next) => {
     success: true,
     data: null,
     message: "Logged out successfully",
+  });
+});
+
+// @desc    Forgot password
+// @route   POST /api/auth/forgotpassword
+// access   Public
+export const forgotPassword = asyncHandler(async (req, res, next) => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    return next(new ErrorResponse("User not found", 404));
+  }
+
+  const code = await sendResetPasswordCode(user);
+
+  user.resetPasswordCode = code;
+  user.resetPasswordExpire = Date.now() + 10 * 60 * 1000;
+
+  await user.save({ validateBeforeSave: false });
+
+  res.status(200).json({
+    success: true,
+    code,
+    message: "Email has been sent",
+  });
+});
+
+// @desc    Reset password
+// @route   POST /api/auth/resetpassword
+// access   Public
+export const resetPassword = asyncHandler(async (req, res, next) => {
+  const { code, password } = req.body;
+
+  if (!password.trim()) {
+    return next(new ErrorResponse("Please provide a password", 400));
+  }
+
+  const user = await User.findOne({
+    resetPasswordCode: code,
+    resetPasswordExpire: { $gt: Date.now() },
+  }).select("+password");
+
+  if (!user) {
+    return next(new ErrorResponse("Reset code invalid", 401));
+  }
+
+  user.password = password;
+  user.resetPasswordCode = undefined;
+  user.resetPasswordExpire = undefined;
+
+  await user.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Password changed",
   });
 });
