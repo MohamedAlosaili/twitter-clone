@@ -66,6 +66,16 @@ function sendTokenAndCookie(user, statusCode, res) {
   }
 }
 
+// @desc    Get current user
+// @route   GET /api/auth/me
+// access   Private
+export const getMe = (req, res, next) => {
+  res.status(200).json({
+    success: true,
+    data: req.user,
+  });
+};
+
 // @desc    Signup user
 // @route   POST /api/auth/forgotpassword
 // access   Public
