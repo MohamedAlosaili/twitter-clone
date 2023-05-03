@@ -15,19 +15,27 @@ export const signup = asyncHandler(async (req, res, next) => {
 // @route   POST /api/v1/auth/login
 // access   Public
 export const login = asyncHandler(async (req, res, next) => {
-  const { username, password } = req.body;
-  const user = await User.findOne({
-    $or: [{ email: username }, { username }],
-  }).select("+password");
+  let user;
 
-  if (!user) {
-    return next(new ErrorResponse("Invalid credentials", 401));
-  }
+  if (req.user) {
+    // User from passoprt Google strategy
+    user = req.user;
+  } else {
+    // Regular user login
+    const { username, password } = req.body;
+    user = await User.findOne({
+      $or: [{ email: username }, { username }],
+    }).select("+password");
 
-  const isMatch = await user.matchPassword(password);
+    if (!user) {
+      return next(new ErrorResponse("Invalid credentials", 401));
+    }
 
-  if (!isMatch) {
-    return next(new ErrorResponse("Invalid credentials", 401));
+    const isMatch = await user.matchPassword(password);
+
+    if (!isMatch) {
+      return next(new ErrorResponse("Invalid credentials", 401));
+    }
   }
 
   sendTokenAndCookie(user, 200, res);
@@ -46,10 +54,15 @@ function sendTokenAndCookie(user, statusCode, res) {
   if (process.env.NODE_ENV === "production") options.secure = true;
 
   res.cookie("token", token, options);
-  res.status(statusCode).json({
-    success: true,
-    token,
-  });
+
+  if (res?.requestFrom === "Google") {
+    res.redirect("/");
+  } else {
+    res.status(statusCode).json({
+      success: true,
+      token,
+    });
+  }
 }
 
 // @desc    Signup user
