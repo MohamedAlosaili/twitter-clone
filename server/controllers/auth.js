@@ -8,10 +8,7 @@ import ErrorResponse from "../utils/errorResponse.js";
 export const signup = asyncHandler(async (req, res, next) => {
   const user = await User.create(req.body);
 
-  res.status(201).json({
-    success: true,
-    data: user,
-  });
+  sendTokenAndCookie(user, 201, res);
 });
 
 // @desc    Login user
@@ -33,8 +30,37 @@ export const login = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse("Invalid credentials", 401));
   }
 
+  sendTokenAndCookie(user, 200, res);
+});
+
+function sendTokenAndCookie(user, statusCode, res) {
+  const token = user.getSignedJwtToken();
+
+  const options = {
+    expires: new Date(
+      Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+  };
+
+  if (process.env.NODE_ENV === "production") options.secure = true;
+
+  res.cookie("token", token, options);
+  res.status(statusCode).json({
+    success: true,
+    token,
+  });
+}
+
+// @desc    Signup user
+// @route   POST /api/v1/auth/signup
+// access   Public
+export const logOut = asyncHandler(async (req, res, next) => {
+  res.cookie("token", "none", { expires: new Date(Date.now()) });
+
   res.status(200).json({
     success: true,
-    data: user,
+    data: null,
+    message: "Logged out successfully",
   });
 });
