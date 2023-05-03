@@ -20,7 +20,7 @@ const UserSchema = new mongoose.Schema(
       trim: true,
       lowercase: true,
       match: [
-        /^(?!.*twitter)[a-zA-Z0-9_]+$/,
+        /^[a-zA-Z0-9_]+$/,
         "Your username can only contain letters, numbers and '_'",
       ],
     },
@@ -62,7 +62,8 @@ const UserSchema = new mongoose.Schema(
     },
     birthday: Date,
     // TODO: pinTweet property
-    // TODO: Reset properties
+    resetPasswordCode: String,
+    resetPasswordExpire: Date,
   },
   { timestamps: true }
 );
@@ -71,13 +72,15 @@ const UserSchema = new mongoose.Schema(
 UserSchema.pre("save", function (next) {
   if (this.username) return next();
 
-  const username = this.email.split("@")[0];
+  const username = this.email.split("@")[0].replace(/[^a-zA-Z0-9_]+/g, "");
   this.username = username;
   next();
 });
 
 // Hash password before save it
 UserSchema.pre("save", async function (next) {
+  if (!this.password) return next();
+
   const hashedPassword = await bcrypt.hash(this.password, 10);
 
   this.password = hashedPassword;
