@@ -12,9 +12,21 @@ const UserSchema = new mongoose.Schema(
       trim: true,
       match: [/^(?!.*twitter).*$/i, `Name can't include "twitter"`],
     },
+    accountType: {
+      type: String,
+      enum: ["google", "regular"],
+      default: "regular",
+    },
     username: {
       type: String,
       unique: true,
+      required: [
+        function () {
+          const isRequired = this.accountType !== "google";
+          return isRequired;
+        },
+        "Username can't be blank",
+      ],
       maxlength: [15, "Your username must be shorter than 15 characters"],
       minlength: [1, "Your username must be longer than 1 character"],
       trim: true,
