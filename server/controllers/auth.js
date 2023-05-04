@@ -76,10 +76,10 @@ export const getMe = (req, res, next) => {
   });
 };
 
-// @desc    Signup user
-// @route   POST /api/auth/forgotpassword
+// @desc    Logout user
+// @route   POST /api/auth/logout
 // access   Public
-export const logOut = asyncHandler(async (req, res, next) => {
+export const logOut = (req, res, next) => {
   res.cookie("token", "none", { expires: new Date(Date.now()) });
 
   res.status(200).json({
@@ -87,7 +87,7 @@ export const logOut = asyncHandler(async (req, res, next) => {
     data: null,
     message: "Logged out successfully",
   });
-});
+};
 
 // @desc    Forgot password
 // @route   POST /api/auth/forgotpassword
