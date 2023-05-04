@@ -27,6 +27,7 @@ export default passport => {
             email,
             password: eneratedPassword,
             avatar: picture,
+            accountType: "google",
           };
 
           user = await User.create(newUser);
