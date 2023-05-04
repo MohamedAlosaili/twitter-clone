@@ -2,3 +2,5 @@ node_modules/
 config.env
 /images
 planning.md
+testAPI/
+template.html
