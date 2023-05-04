@@ -47,13 +47,9 @@ app.use(
 app.use("/api/auth", auth);
 
 // TODO: In production this will be client/dist
-app.use(
-  express.static(path.join(path.join(process.cwd(), "..", "testAPI", "dist")))
-);
+app.use(express.static(path.join(process.cwd(), "..", "testAPI", "dist")));
 app.get("*", (req, res) =>
-  res.sendFile(
-    path.join(path.join(process.cwd(), "..", "testAPI", "dist", "index.html"))
-  )
+  res.sendFile(path.join(process.cwd(), "..", "testAPI", "dist", "index.html"))
 );
 
 app.use(errorHandler);
