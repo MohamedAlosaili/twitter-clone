@@ -54,7 +54,11 @@ const UserSchema = new mongoose.Schema(
       maxlength: [32, "Your password must be shorter than 32 characters"],
       select: false,
     },
-    avatar: String,
+    avatar: {
+      type: String,
+      default:
+        "https://firebasestorage.googleapis.com/v0/b/twittercl0ne.appspot.com/o/twitter-default-avatar.png?alt=media&token=318135ee-87e3-48e4-b71b-fe901a1d3a32",
+    },
     headerImage: String,
     bio: {
       type: String,
