@@ -17,6 +17,7 @@ passportSetup(passport);
 
 // Route files
 import auth from "./routes/auth.js";
+import tweets from "./routes/tweets.js";
 
 const app = express();
 connectDB();
@@ -45,6 +46,7 @@ app.use(
 
 // Mount Routes
 app.use("/api/auth", auth);
+app.use("/api/tweets", tweets);
 
 // TODO: In production this will be client/dist
 app.use(express.static(path.join(process.cwd(), "..", "testAPI", "dist")));
