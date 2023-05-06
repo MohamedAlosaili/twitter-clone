@@ -56,8 +56,8 @@ const UserSchema = new mongoose.Schema(
     },
     avatar: {
       type: String,
-      default:
-        "https://firebasestorage.googleapis.com/v0/b/twittercl0ne.appspot.com/o/twitter-default-avatar.png?alt=media&token=318135ee-87e3-48e4-b71b-fe901a1d3a32",
+      default: "default-avatar.png",
+      // It's handled by the client
     },
     headerImage: String,
     bio: {
