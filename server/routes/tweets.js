@@ -1,4 +1,5 @@
 import express from "express";
+import multer from "multer";
 
 const router = express.Router();
 
@@ -11,8 +12,14 @@ import {
 } from "../controllers/tweets.js";
 
 import protect from "../middlewares/protect.js";
+import uploadMedia from "../middlewares/uploadMedia.js";
 
-router.route("/").get(getTweets).post(protect, addTweet);
+const upload = multer();
+
+router
+  .route("/")
+  .get(getTweets)
+  .post(protect, upload.array("media"), uploadMedia, addTweet);
 
 router
   .route("/:id")
