@@ -64,4 +64,21 @@ const TweetSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+TweetSchema.statics.updateTweetReplies = async function (tweetId, number) {
+  await this.model("Tweet").updateOne(
+    { _id: tweetId },
+    { $inc: { replies: number } }
+  );
+};
+
+TweetSchema.pre("save", function (next) {
+  if (this.type === "tweet") return next();
+  return this.constructor.updateTweetReplies(this.tweetId, 1);
+});
+
+TweetSchema.pre("deleteOne", { document: true }, function (next) {
+  if (this.type === "tweet") return next();
+  return this.constructor.updateTweetReplies(this.tweetId, -1);
+});
+
 export default mongoose.model("Tweet", TweetSchema);
