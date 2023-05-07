@@ -25,11 +25,18 @@ export const getTweets = asyncHandler(async (req, res, next) => {
 export const getTweet = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
 
-  // TODO: Add populate for replies
-  const tweet = await Tweet.findById(id).populate(
-    "authorId",
-    "name username avatar"
-  );
+  const populateAuthorInfo = {
+    path: "authorId",
+    select: "name username avatar",
+  };
+  // populate("tweetId") if the tweet is a reply type
+  const tweet = await Tweet.findById(id).populate([
+    populateAuthorInfo,
+    {
+      path: "tweetId",
+      populate: populateAuthorInfo,
+    },
+  ]);
 
   if (!tweet) {
     return next(new ErrorResponse("Tweet not found", 404));
