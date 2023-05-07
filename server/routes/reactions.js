@@ -6,7 +6,7 @@ import {
   addReaction,
   getTweetReactions,
   removeReaction,
-} from "../controllers/likes.js";
+} from "../controllers/reactions.js";
 
 import protect from "../middlewares/protect.js";
 
