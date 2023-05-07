@@ -35,6 +35,13 @@ const TweetSchema = new mongoose.Schema(
         `Media can't be more than 4 items`,
       ],
     },
+    tweetId: {
+      type: mongoose.Types.ObjectId,
+      required: function () {
+        return this.type === "reply";
+      },
+      ref: "Tweet",
+    },
     likes: {
       type: Number,
       default: 0,
