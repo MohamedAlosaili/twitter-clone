@@ -1,8 +1,15 @@
 import mongoose from "mongoose";
-import Tweet from "./Tweet.js";
 
-const LikeSchema = new mongoose.Schema(
+const ReactionSchema = new mongoose.Schema(
   {
+    type: {
+      type: String,
+      required: true,
+      enum: {
+        values: ["like", "retweet"],
+        message: "{VALUE} not supported as a reaction type",
+      },
+    },
     authorId: {
       type: mongoose.Types.ObjectId,
       required: true,
@@ -17,22 +24,26 @@ const LikeSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Prevent user from adding more than one like per tweet
-LikeSchema.index({ tweetId: 1, authorId: 1 });
+// Prevent user from adding more than one like/retweet per tweet
+ReactionSchema.index({ type: 1, authorId: 1, tweetId: 1 }, { unique: true });
 
-LikeSchema.statics.updateTweetLikes = async function (tweetId, number) {
+ReactionSchema.statics.updateTweetReaction = async function (
+  tweetId,
+  type,
+  number
+) {
   await this.model("Tweet").updateOne(
     { _id: tweetId },
-    { $inc: { likes: number } }
+    { $inc: { [type + "s"]: number } }
   );
 };
 
-LikeSchema.pre("save", function (next) {
-  return this.constructor.updateTweetLikes(this.tweetId, 1);
+ReactionSchema.pre("save", function (next) {
+  return this.constructor.updateTweetReaction(this.tweetId, this.type, 1);
 });
 
-LikeSchema.pre("deleteOne", { document: true }, function (next) {
-  return this.constructor.updateTweetLikes(this.tweetId, -1);
+ReactionSchema.pre("deleteOne", { document: true }, function (next) {
+  return this.constructor.updateTweetReaction(this.tweetId, this.type, -1);
 });
 
-export default mongoose.model("Like", LikeSchema);
+export default mongoose.model("Reaction", ReactionSchema);
