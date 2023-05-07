@@ -3,6 +3,9 @@ import multer from "multer";
 
 const router = express.Router();
 
+import repliesRouter from "./replies.js";
+import likesRouter from "./likes.js";
+
 import {
   addTweet,
   deleteTweet,
@@ -13,6 +16,9 @@ import {
 
 import protect from "../middlewares/protect.js";
 import uploadMedia from "../middlewares/uploadMedia.js";
+
+router.use("/:tweetId/replies", repliesRouter);
+router.use("/:tweetId/likes", likesRouter);
 
 const upload = multer();
 
