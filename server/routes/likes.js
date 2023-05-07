@@ -2,14 +2,18 @@ import express from "express";
 
 const router = express.Router({ mergeParams: true });
 
-import { addLike, getTweetLikes, removeLike } from "../controllers/likes.js";
+import {
+  addReaction,
+  getTweetReactions,
+  removeReaction,
+} from "../controllers/likes.js";
 
 import protect from "../middlewares/protect.js";
 
 router
   .route("/")
-  .get(getTweetLikes)
-  .post(protect, addLike)
-  .delete(protect, removeLike);
+  .get(getTweetReactions)
+  .post(protect, addReaction)
+  .delete(protect, removeReaction);
 
 export default router;
