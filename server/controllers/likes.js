@@ -1,29 +1,30 @@
-import Like from "../models/Like.js";
+import Reaction from "../models/Like.js";
 import Tweet from "../models/Tweet.js";
 import asyncHandler from "../middlewares/asyncHandler.js";
 import ErrorResponse from "../utils/errorResponse.js";
 
-// @desc    Get tweet likes
-// @route   GET /api/tweets/:tweetId/likes
+// @desc    Get tweet reactions (likes & retweets)
+// @route   GET /api/tweets/:tweetId/reactions?type=like|retweet
 // access   Public
-export const getTweetLikes = asyncHandler(async (req, res, next) => {
+export const getTweetReactions = asyncHandler(async (req, res, next) => {
+  const { type } = req.query;
   const { tweetId } = req.params;
 
-  const likes = await Like.find({ tweetId }).populate(
+  const reactions = await Reaction.find({ tweetId, type }).populate(
     "authorId",
     "name username avatar bio"
   );
 
   res.status(200).json({
     success: true,
-    data: likes,
+    data: reactions,
   });
 });
 
-// @desc    Add like
-// @route   POST /api/tweets/:tweetId/likes
+// @desc    Add reaction
+// @route   POST /api/tweets/:tweetId/reactions
 // access   Private - anyone logged in
-export const addLike = asyncHandler(async (req, res, next) => {
+export const addReaction = asyncHandler(async (req, res, next) => {
   const { tweetId } = req.params;
 
   const tweet = await Tweet.findById(tweetId);
@@ -32,37 +33,38 @@ export const addLike = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse("Tweet not found", 404));
   }
 
-  await Like.create({ tweetId, authorId: req.user.id });
+  const type = req.body.type;
+  await Reaction.create({ type, tweetId, authorId: req.user.id });
 
   res.status(201).json({
     success: true,
     data: null,
-    message: "Like added ♥",
+    message: `Reaction added`,
   });
 });
 
-// @desc    Remove like
-// @route   DELETE /api/tweets/:tweetId/likes
+// @desc    Remove reaction
+// @route   DELETE /api/tweets/:tweetId/reactions?type=like|retweet
 // access   Private - anyone logged in
-export const removeLike = asyncHandler(async (req, res, next) => {
+export const removeReaction = asyncHandler(async (req, res, next) => {
+  const { type } = req.query;
   const { tweetId } = req.params;
 
-  const like = await Like.findOne({
+  const reaction = await Reaction.findOne({
+    type,
     tweetId,
     authorId: req.user.id,
   });
 
-  if (!like) {
-    return next(
-      new ErrorResponse(`There is no like for this user in this tweet`, 404)
-    );
+  if (!reaction) {
+    return next(new ErrorResponse(`No reaction found`, 404));
   }
 
-  await like.deleteOne();
+  await reaction.deleteOne();
 
   res.status(200).json({
     success: true,
     data: null,
-    message: "Like removed",
+    message: `Reaction removed`,
   });
 });
