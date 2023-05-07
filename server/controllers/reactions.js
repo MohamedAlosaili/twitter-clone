@@ -1,4 +1,4 @@
-import Reaction from "../models/Like.js";
+import Reaction from "../models/Reaction.js";
 import Tweet from "../models/Tweet.js";
 import asyncHandler from "../middlewares/asyncHandler.js";
 import ErrorResponse from "../utils/errorResponse.js";

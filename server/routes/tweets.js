@@ -4,7 +4,7 @@ import multer from "multer";
 const router = express.Router();
 
 import repliesRouter from "./replies.js";
-import likesRouter from "./likes.js";
+import reactionsRouter from "./reactions.js";
 
 import {
   addTweet,
@@ -18,7 +18,7 @@ import protect from "../middlewares/protect.js";
 import uploadMedia from "../middlewares/uploadMedia.js";
 
 router.use("/:tweetId/replies", repliesRouter);
-router.use("/:tweetId/likes", likesRouter);
+router.use("/:tweetId/reactions", reactionsRouter);
 
 const upload = multer();
 
