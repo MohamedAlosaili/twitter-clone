@@ -17,10 +17,8 @@ const FollowSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// I added pre(validate) hook instead of index, because index doesn't stop other
-// pre hooks which cause inconsistency in followers/following user properties number
-FollowSchema.pre("validate", async function (next) {
-  // Prevent user from follow himself
+// Prevent user from follow himself
+FollowSchema.pre("validate", function (next) {
   if (this.followerId.toString() === this.followingId.toString()) {
     return next(
       new ErrorResponse(
@@ -29,17 +27,20 @@ FollowSchema.pre("validate", async function (next) {
       )
     );
   }
+  next();
+});
 
+// I added pre(validate) hook instead of index, because index doesn't stop other
+// pre hooks which cause inconsistency in followers/following user properties number
+FollowSchema.pre("validate", async function (next) {
   const follow = await this.constructor.findOne({
     followerId: this.followerId,
     followingId: this.followingId,
   });
 
   if (follow) {
-    return next(new ErrorResponse("Duplicate follow relationship", 400));
+    return next(new ErrorResponse("Duplicate follow relationship found", 400));
   }
-
-  next();
 });
 
 FollowSchema.statics.updateFollowStatus = async function (
