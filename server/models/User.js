@@ -77,6 +77,16 @@ const UserSchema = new mongoose.Schema(
       maxlength: [100, "Your website URL must be shorter than 100 characters"],
     },
     birthday: Date,
+    followers: {
+      type: Number,
+      default: 0,
+      min: [0, "Followers cannot be a negative number"],
+    },
+    following: {
+      type: Number,
+      default: 0,
+      min: [0, "Following cannot be a negative number"],
+    },
     // TODO: pinTweet property
     resetPasswordCode: String,
     resetPasswordExpire: Date,
