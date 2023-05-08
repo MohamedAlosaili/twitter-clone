@@ -84,4 +84,9 @@ TweetSchema.pre("deleteOne", { document: true }, function (next) {
   return this.constructor.updateTweetReplies(this.tweetId, -1);
 });
 
+// Cascade Deleting - delete tweet reactions
+TweetSchema.post("deleteOne", { document: true }, function () {
+  return this.model("Reaction").deleteMany({ tweetId: this._id });
+});
+
 export default mongoose.model("Tweet", TweetSchema);
