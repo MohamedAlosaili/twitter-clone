@@ -6,10 +6,15 @@ import ErrorResponse from "../utils/errorResponse.js";
 // @route   GET /api/tweets
 // access   Public
 export const getTweets = asyncHandler(async (req, res, next) => {
-  const tweets = await Tweet.find().populate(
-    "authorId",
-    "name username avatar"
-  );
+  const populateAuthorInfo = {
+    path: "authorId",
+    select: "name username avatar",
+  };
+
+  const tweets = await Tweet.find().populate([
+    populateAuthorInfo,
+    { path: "tweetId", populate: populateAuthorInfo },
+  ]);
 
   // TODO: Add a limit & pages properties
   res.status(200).json({
