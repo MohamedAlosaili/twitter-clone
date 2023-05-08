@@ -1,10 +1,11 @@
 import mongoose from "mongoose";
+import ErrorResponse from "../utils/errorResponse.js";
 
 const ReactionSchema = new mongoose.Schema(
   {
     type: {
       type: String,
-      required: true,
+      required: [true, "Add reaction type"],
       enum: {
         values: ["like", "retweet"],
         message: "{VALUE} not supported as a reaction type",
@@ -25,7 +26,18 @@ const ReactionSchema = new mongoose.Schema(
 );
 
 // Prevent user from adding more than one like/retweet per tweet
-ReactionSchema.index({ type: 1, authorId: 1, tweetId: 1 }, { unique: true });
+// Prevent increasing if there is a duplicate doc - index not preventing increasing
+ReactionSchema.pre("validate", async function (next) {
+  const reaction = await this.constructor.findOne({
+    type: this.type,
+    authorId: this.authorId,
+    tweetId: this.tweetId,
+  });
+
+  if (reaction) {
+    return next(new ErrorResponse(`Duplicate ${this.type} found`, 400));
+  }
+});
 
 ReactionSchema.statics.updateTweetReaction = async function (
   tweetId,
