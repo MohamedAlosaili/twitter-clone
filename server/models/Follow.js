@@ -48,14 +48,16 @@ FollowSchema.statics.updateFollowStatus = async function (
   followingId,
   number
 ) {
-  await this.model("User").updateOne(
-    { _id: followerId },
-    { $inc: { following: number } }
-  );
-  await this.model("User").updateOne(
-    { _id: followingId },
-    { $inc: { followers: number } }
-  );
+  await Promise.all([
+    this.model("User").updateOne(
+      { _id: followerId },
+      { $inc: { following: number } }
+    ),
+    this.model("User").updateOne(
+      { _id: followingId },
+      { $inc: { followers: number } }
+    ),
+  ]);
 };
 
 FollowSchema.pre("save", async function (next) {
