@@ -45,14 +45,17 @@ const TweetSchema = new mongoose.Schema(
     likes: {
       type: Number,
       default: 0,
+      min: [0, "Likes cannot be a negative number"],
     },
     retweets: {
       type: Number,
       default: 0,
+      min: [0, "Retweets cannot be a negative number"],
     },
     replies: {
       type: Number,
       default: 0,
+      min: [0, "Replies cannot be a negative number"],
     },
     updatesLeft: {
       type: Number,
