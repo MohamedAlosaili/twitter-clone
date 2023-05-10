@@ -14,6 +14,7 @@ import {
   updateTweet,
 } from "../controllers/tweets.js";
 
+import advancedResults from "../middlewares/advancedResults.js";
 import protect from "../middlewares/protect.js";
 import uploadMedia from "../middlewares/uploadMedia.js";
 
@@ -24,7 +25,7 @@ const upload = multer();
 
 router
   .route("/")
-  .get(getTweets)
+  .get(getTweets, advancedResults)
   .post(protect, upload.array("media"), uploadMedia, addTweet);
 
 router
