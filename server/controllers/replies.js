@@ -5,16 +5,18 @@ import ErrorResponse from "../utils/errorResponse.js";
 // @desc    Get all replies for a tweet
 // @route   GET /api/tweets/:tweetId/replies
 // access   Public
-export const getTweetReplies = asyncHandler(async (req, res, next) => {
+export const getTweetReplies = (req, res, next) => {
   const { tweetId } = req.params;
 
-  const replies = await Tweet.find({ type: "reply", tweetId });
+  req.model = Tweet;
+  req.queryMethod = "find";
+  req.controllerFilters = { type: "reply", tweetId };
+  req.populate = { path: "authorId", select: "name username avatar" };
 
-  res.status(200).json({
-    success: true,
-    data: replies,
-  });
-});
+  res.status(200);
+
+  next();
+};
 
 // @desc    Add a reply
 // @route   POST /api/tweets/:tweetId/replies
