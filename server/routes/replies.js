@@ -7,12 +7,13 @@ import { getTweetReplies, addReply } from "../controllers/replies.js";
 
 import protect from "../middlewares/protect.js";
 import uploadMedia from "../middlewares/uploadMedia.js";
+import advancedResults from "../middlewares/advancedResults.js";
 
 const upload = multer();
 
 router
   .route("/")
-  .get(getTweetReplies)
+  .get(getTweetReplies, advancedResults)
   .post(protect, upload.array("media"), uploadMedia, addReply);
 
 export default router;
