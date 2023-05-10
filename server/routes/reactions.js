@@ -9,10 +9,11 @@ import {
 } from "../controllers/reactions.js";
 
 import protect from "../middlewares/protect.js";
+import advancedResults from "../middlewares/advancedResults.js";
 
 router
   .route("/")
-  .get(getTweetReactions)
+  .get(getTweetReactions, advancedResults)
   .post(protect, addReaction)
   .delete(protect, removeReaction);
 
