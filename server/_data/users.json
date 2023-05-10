@@ -1,0 +1,51 @@
+[
+  {
+    "_id": "6458ad68fef8c944f46465e9",
+    "name": "Mohamed",
+    "email": "mohamed@gmail.com",
+    "username": "mohamed",
+    "password": "12345678"
+  },
+  {
+    "_id": "645887d11255870e9a9cbb70",
+    "name": "sami",
+    "email": "sami@gmail.com",
+    "username": "sami",
+    "password": "12345678"
+  },
+  {
+    "_id": "645887c81255870e9a9cbb6e",
+    "name": "Ruba",
+    "email": "ruba@gmail.com",
+    "username": "ruba",
+    "password": "12345678"
+  },
+  {
+    "_id": "6459faf6fe64a6ce9a737f1b",
+    "name": "Alaa",
+    "email": "alaa@gmail.com",
+    "username": "alaa",
+    "password": "12345678"
+  },
+  {
+    "_id": "6459faf6fe64a6ce9a737f1c",
+    "name": "Deem",
+    "email": "deem@gmail.com",
+    "username": "deem",
+    "password": "12345678"
+  },
+  {
+    "_id": "6459faf6fe64a6ce9a737f1d",
+    "name": "Rose",
+    "email": "rose@gmail.com",
+    "username": "rose",
+    "password": "12345678"
+  },
+  {
+    "_id": "6459faf6fe64a6ce9a737f1e",
+    "name": "Ali",
+    "email": "ali@gmail.com",
+    "username": "ali",
+    "password": "12345678"
+  }
+]
