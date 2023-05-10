@@ -5,7 +5,10 @@ const advancedResults = asyncHandler(async (req, res) => {
   let { page: pageNum, limit: limitNum, select, sort, ...filters } = req.query;
 
   filters = JSON.parse(
-    JSON.stringify(filters).replace(/\b(lt|lte|in|gt|gte)\b/g, str => `$${str}`)
+    JSON.stringify(filters).replace(
+      /\b(lt|lte|in|nin|gt|gte|ne)\b/g,
+      str => `$${str}`
+    )
   );
 
   const controllerFilters = req.controllerFilters
