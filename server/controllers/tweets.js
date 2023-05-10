@@ -1,28 +1,20 @@
-import asyncHandler from "../middlewares/asyncHandler.js";
 import Tweet from "../models/Tweet.js";
+import asyncHandler from "../middlewares/asyncHandler.js";
 import ErrorResponse from "../utils/errorResponse.js";
 
 // @desc    Get all tweets
 // @route   GET /api/tweets
 // access   Public
-export const getTweets = asyncHandler(async (req, res, next) => {
-  const populateAuthorInfo = {
-    path: "authorId",
-    select: "name username avatar",
-  };
+export const getTweets = (req, res, next) => {
+  req.model = Tweet;
+  req.queryMethod = "find";
+  req.controllerFilters = { type: "tweet" };
+  req.populate = { path: "authorId", select: "name username avatar" };
 
-  const tweets = await Tweet.find().populate([
-    populateAuthorInfo,
-    { path: "tweetId", populate: populateAuthorInfo },
-  ]);
+  res.status(200);
 
-  // TODO: Add a limit & pages properties
-  res.status(200).json({
-    success: true,
-    data: tweets,
-    count: tweets.length,
-  });
-});
+  next();
+};
 
 // @desc    Get single tweet
 // @route   GET /api/tweets/:id
