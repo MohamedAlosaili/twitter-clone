@@ -6,20 +6,19 @@ import ErrorResponse from "../utils/errorResponse.js";
 // @desc    Get tweet reactions (likes & retweets)
 // @route   GET /api/tweets/:tweetId/reactions?type=like|retweet
 // access   Public
-export const getTweetReactions = asyncHandler(async (req, res, next) => {
+export const getTweetReactions = (req, res, next) => {
   const { type } = req.query;
   const { tweetId } = req.params;
 
-  const reactions = await Reaction.find({ tweetId, type }).populate(
-    "authorId",
-    "name username avatar bio"
-  );
+  req.model = Reaction;
+  req.queryMethod = "find";
+  req.controllerFilters = { tweetId, type };
+  req.populate = { path: "authorId", select: "name username avatar bio" };
 
-  res.status(200).json({
-    success: true,
-    data: reactions,
-  });
-});
+  res.status(200);
+
+  next();
+};
 
 // @desc    Add reaction
 // @route   POST /api/tweets/:tweetId/reactions
