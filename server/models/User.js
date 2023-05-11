@@ -59,7 +59,7 @@ const UserSchema = new mongoose.Schema(
       default: "default-avatar.png",
       // It's handled by the client
     },
-    headerImage: String,
+    header: String,
     bio: {
       type: String,
       maxlength: [160, "Your bio must be shorter than 160 characters"],
