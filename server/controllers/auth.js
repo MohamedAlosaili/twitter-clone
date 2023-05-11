@@ -76,6 +76,41 @@ export const getMe = (req, res, next) => {
   });
 };
 
+// @desc    Update profile images
+// @route   POST /api/auth/profile/images
+// access   Private - account owner
+export const updateProfileImages = asyncHandler(async (req, res, next) => {
+  const user = await User.findByIdAndUpdate(req.user.id, req.body.images, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(200).json({
+    success: true,
+    data: user,
+    message: "Profile updated",
+  });
+});
+
+// @desc    Update profile info
+// @route   POST /api/auth/profile
+// access   Private - account owner
+export const updateProfile = asyncHandler(async (req, res, next) => {
+  const { name, bio, location, website } = req.body;
+
+  const user = await User.findByIdAndUpdate(
+    req.user.id,
+    { name, bio, location, website },
+    { new: true, runValidators: true }
+  );
+
+  res.status(200).json({
+    success: true,
+    data: user,
+    message: "Profile info updated",
+  });
+});
+
 // @desc    Logout user
 // @route   POST /api/auth/logout
 // access   Public
