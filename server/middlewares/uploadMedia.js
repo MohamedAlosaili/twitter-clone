@@ -10,9 +10,19 @@ const uploadMedia = asyncHandler(async (req, res, next) => {
     return next(new ErrorResponse("Media cannot be more than 4 files", 400));
   }
 
-  // TODO: Max size need testing
+  const invalidMediaType = req.files.some(
+    file =>
+      !file.mimetype.startsWith("image") && !file.mimetype.startsWith("video")
+  );
+
+  if (invalidMediaType) {
+    return next(
+      new ErrorResponse("Invalid file type. only images/videos are valid", 400)
+    );
+  }
+
   const maxImageSize = process.env.MAX_IMAGE_SIZE;
-  const maxVideoSize = process.env.MAX_IMAGE_SIZE;
+  const maxVideoSize = process.env.MAX_VIDEO_SIZE;
 
   const invalidImageSize = file => file.size > maxImageSize;
   const invalidVideoSize = file => file.size > maxVideoSize;
