@@ -18,7 +18,7 @@ export default asyncHandler(async (req, res, next) => {
 
   const decoded = jwt.verify(token, process.env.JWT_SECRET);
 
-  const user = await User.findById(decoded.id);
+  const user = await User.findById(decoded.id).select("+email +accountType");
 
   if (!user) {
     // If the account was deleted (by another device) the user will return null
