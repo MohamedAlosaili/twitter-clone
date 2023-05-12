@@ -130,7 +130,7 @@ export const logOut = (req, res, next) => {
 export const forgotPassword = asyncHandler(async (req, res, next) => {
   const { email } = req.body;
 
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email }).select("+email");
 
   if (!user) {
     return next(new ErrorResponse("User not found", 404));
@@ -163,10 +163,10 @@ export const resetPassword = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({
     resetPasswordCode: code,
     resetPasswordExpire: { $gt: Date.now() },
-  }).select("+password");
+  });
 
   if (!user) {
-    return next(new ErrorResponse("Reset code invalid", 401));
+    return next(new ErrorResponse("Invalid reset code", 401));
   }
 
   user.password = password;
