@@ -89,7 +89,10 @@ const UserSchema = new mongoose.Schema(
       default: 0,
       min: [0, "Following cannot be a negative number"],
     },
-    // TODO: pinTweet property
+    pinnedTweet: {
+      type: mongoose.Types.ObjectId,
+      ref: "Tweet",
+    },
     resetPasswordCode: {
       type: String,
       select: false,
