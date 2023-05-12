@@ -20,12 +20,12 @@ export default passport => {
           return cb(null, user);
         } else {
           const name = profile.displayName.replace(/twitter/gi, str => str[0]);
-          const eneratedPassword = crypto.randomBytes(10).toString("hex");
+          const generatedPassword = crypto.randomBytes(10).toString("hex");
 
           const newUser = {
             name,
             email,
-            password: eneratedPassword,
+            password: generatedPassword,
             avatar: picture,
             accountType: "google",
           };
