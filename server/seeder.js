@@ -25,6 +25,9 @@ const replies = JSON.parse(
 const reactions = JSON.parse(
   fs.readFileSync(path.join(process.cwd(), "_data", "reactions.json"), "utf8")
 );
+const follows = JSON.parse(
+  fs.readFileSync(path.join(process.cwd(), "_data", "follows.json"), "utf8")
+);
 
 const arg = process.argv[2];
 
@@ -50,6 +53,7 @@ async function importData() {
     await Tweet.create(tweets);
     await Tweet.create(replies);
     await Reaction.create(reactions);
+    await Follow.create(follows);
 
     console.log("Data imported ☑️".green.inverse);
     process.exit(1);
