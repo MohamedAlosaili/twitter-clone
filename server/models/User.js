@@ -16,6 +16,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       enum: ["google", "regular"],
       default: "regular",
+      select: false,
     },
     username: {
       type: String,
@@ -46,6 +47,7 @@ const UserSchema = new mongoose.Schema(
       ],
       lowercase: true,
       trim: true,
+      select: false,
     },
     password: {
       type: String,
@@ -88,8 +90,14 @@ const UserSchema = new mongoose.Schema(
       min: [0, "Following cannot be a negative number"],
     },
     // TODO: pinTweet property
-    resetPasswordCode: String,
-    resetPasswordExpire: Date,
+    resetPasswordCode: {
+      type: String,
+      select: false,
+    },
+    resetPasswordExpire: {
+      type: Date,
+      select: false,
+    },
   },
   { timestamps: true }
 );
