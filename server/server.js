@@ -20,6 +20,7 @@ import auth from "./routes/auth.js";
 import tweets from "./routes/tweets.js";
 import follows from "./routes/follows.js";
 import users from "./routes/users.js";
+import search from "./routes/search.js";
 
 const app = express();
 connectDB();
@@ -51,6 +52,7 @@ app.use("/api/auth", auth);
 app.use("/api/tweets", tweets);
 app.use("/api/follows", follows);
 app.use("/api/users", users);
+app.use("/api/search", search);
 
 // TODO: In production this will be client/dist
 app.use(express.static(path.join(process.cwd(), "..", "testAPI", "dist")));
