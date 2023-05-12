@@ -7,7 +7,7 @@ import Follow from "../models/Follow.js";
 import asyncHandler from "../middlewares/asyncHandler.js";
 import ErrorResponse from "../utils/errorResponse.js";
 
-import { getPageAndLimit, getPagination } from "../utils/pagination.js";
+import lookup from "../utils/lookup.js";
 
 // @desc    Get user info
 // @route   GET /api/users/:id
@@ -25,16 +25,6 @@ export const getUserProfile = asyncHandler(async (req, res, next) => {
     success: true,
     data: user,
   });
-});
-
-const lookup = (from, localField, foreignField, as, pipeline = []) => ({
-  $lookup: {
-    from: from,
-    localField,
-    foreignField,
-    pipeline,
-    as,
-  },
 });
 
 // @desc    Get user followers and following list
@@ -69,12 +59,11 @@ export const getFollowLists = (req, res, next) => {
 // @desc    Get user tweets
 // @route   GET /api/users/:id/tweets?withReplies=???
 // access   Public
-export const getUserTweets = asyncHandler(async (req, res, next) => {
+export const getUserTweets = (req, res, next) => {
   const id = new mongoose.Types.ObjectId(req.params.id);
 
-  const { page: pageNum, limit: limitNum, withReplies } = req.query;
-
-  const { page, limit, startIndex } = getPageAndLimit(pageNum, limitNum);
+  const { withReplies } = req.query;
+  delete req.query.withReplies;
 
   const authorIdLookup = [
     lookup("users", "authorId", "_id", "authorId", [
@@ -90,7 +79,7 @@ export const getUserTweets = asyncHandler(async (req, res, next) => {
     },
   ];
 
-  const tweets = await User.aggregate([
+  const pipeline = [
     { $match: { _id: id } },
     lookup("tweets", "_id", "authorId", "userTweets", [
       ...(withReplies ? [] : [{ $match: { type: "tweet" } }]),
@@ -105,26 +94,15 @@ export const getUserTweets = asyncHandler(async (req, res, next) => {
     { $unwind: "$tweets" },
     { $sort: { "tweets.createdAt": -1 } },
     { $replaceRoot: { newRoot: "$tweets" } },
-  ])
-    .skip(startIndex)
-    .limit(limit);
+  ];
 
-  const [totalTweets, totalRetweets] = await Promise.all([
-    Tweet.countDocuments({ type: "tweet", authorId: id }),
-    Reaction.countDocuments({ type: "retweet", authorId: id }),
-  ]);
+  req.model = User;
+  req.queryMethod = "aggregate";
+  req.aggregatePipeline = pipeline;
+  req.countDocuments = User.aggregate([...pipeline, { $count: "count" }]);
 
-  const total = totalTweets + totalRetweets;
-
-  const pagination = getPagination(page, limit, total, tweets.length);
-
-  res.status(200).json({
-    success: true,
-    data: tweets,
-    pagination,
-    total,
-  });
-});
+  next();
+};
 
 // @desc    Get user likes
 // @route   GET /api/users/:id/likes
