@@ -14,7 +14,7 @@ import advancedResults from "../middlewares/advancedResults.js";
 
 router.get("/:id", getUserProfile);
 
-router.get("/:id/tweets", getUserTweets);
+router.get("/:id/tweets", getUserTweets, advancedResults);
 
 router.get("/:id/media", getUserMedia, advancedResults);
 
