@@ -11,10 +11,10 @@
   - <a href="#forgotpassword">Forgot Password</a>
   - <a href="#resetpassword">Reset Password</a>
 - <a href="#updateuserprofile">Update user profile</a>
-  - <a id="updateimages">Update profile images</a>
-  - <a id="updateinfo">Update profile info</a>
-  - <a id="addpinnedtweet">Add pinned tweet</a>
-  - <a id="removepinnedtweet">Remove pinned tweet</a>
+  - <a id="#updateimages">Update profile images</a>
+  - <a id="#updateinfo">Update profile info</a>
+  - <a id="#addpinnedtweet">Add pinned tweet</a>
+  - <a id="#removepinnedtweet">Remove pinned tweet</a>
 - <a href="#userprofile">User Profile</a>
   - <a href="#getuserinfo">Get user info</a>
   - <a href="#getuserfollowlist">Get user follow list</a>
