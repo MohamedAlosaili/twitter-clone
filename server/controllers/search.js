@@ -4,7 +4,7 @@ import ErrorResponse from "../utils/errorResponse.js";
 import lookup from "../utils/lookup.js";
 
 // @desc    Search for all tweets
-// @route   POST /api/search?q=search text&type=tweets
+// @route   GET /api/search?q=search text&type=tweets
 // access   Public
 export const search = (req, res, next) => {
   const { q: query, type } = req.query;
