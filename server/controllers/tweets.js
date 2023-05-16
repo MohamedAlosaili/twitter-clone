@@ -82,20 +82,23 @@ export const updateTweet = asyncHandler(async (req, res, next) => {
   }
 
   const { content } = req.body;
-  const updatesLeft = tweet.updatesLeft - 1;
-
-  tweet = await Tweet.findByIdAndUpdate(
-    id,
-    {
-      content,
-      updatesLeft,
-    },
-    { new: true, runValidators: true }
-  );
-
-  const message = `Tweet updated successfully. ${updatesLeft} update${
-    updatesLeft > 1 ? "s" : ""
-  } left`;
+  let message;
+  if (content) {
+    const updatesLeft = tweet.updatesLeft - 1;
+    message = `Tweet updated successfully. ${updatesLeft} update${
+      updatesLeft > 1 ? "s" : ""
+    } left`;
+    tweet = await Tweet.findByIdAndUpdate(
+      id,
+      {
+        content,
+        updatesLeft,
+      },
+      { new: true, runValidators: true }
+    );
+  } else {
+    message = "Nothing to update";
+  }
 
   res.status(200).json({
     success: true,
