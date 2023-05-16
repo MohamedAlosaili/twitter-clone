@@ -2,7 +2,6 @@ import User from "../models/User.js";
 import Tweet from "../models/Tweet.js";
 import asyncHandler from "../middlewares/asyncHandler.js";
 import ErrorResponse from "../utils/errorResponse.js";
-import mongoose from "mongoose";
 
 // @desc    Update profile images
 // @route   PUT /api/auth/profile/images
@@ -26,16 +25,25 @@ export const updateProfileImages = asyncHandler(async (req, res, next) => {
 export const updateProfile = asyncHandler(async (req, res, next) => {
   const { name, bio, location, website } = req.body;
 
-  const user = await User.findByIdAndUpdate(
-    req.user.id,
-    { name, bio, location, website },
-    { new: true, runValidators: true }
-  );
+  const shouldUpdate = !!name || !!bio || !!location || !!website;
+
+  let message;
+  let user = null;
+  if (shouldUpdate) {
+    user = await User.findByIdAndUpdate(
+      req.user.id,
+      { name, bio, location, website },
+      { new: true, runValidators: true }
+    );
+    message = "Profile info updated";
+  } else {
+    message = "Nothing to update";
+  }
 
   res.status(200).json({
     success: true,
     data: user,
-    message: "Profile info updated",
+    message,
   });
 });
 
