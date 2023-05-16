@@ -3,7 +3,7 @@ import ErrorResponse from "../utils/errorResponse.js";
 import uploadToStorage from "../utils/uploadToStorage.js";
 
 const uploadProfileImages = asyncHandler(async (req, res, next) => {
-  if (!req.files) {
+  if (!req.files || JSON.stringify(req.files) === "{}") {
     return next(new ErrorResponse("No file included", 400));
   }
 
