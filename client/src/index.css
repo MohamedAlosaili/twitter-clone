@@ -1,3 +1,30 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+@layer base {
+  :root {
+    /* blue by default  */
+    --accent-color: 29, 155, 240;
+  }
+
+  html[accent-color="yellow"]:root {
+    --accent-color: 255, 212, 0;
+  }
+
+  html[accent-color="pink"]:root {
+    --accent-color: 249, 24, 128;
+  }
+
+  html[accent-color="purple"]:root {
+    --accent-color: 120, 86, 255;
+  }
+
+  html[accent-color="orange"]:root {
+    --accent-color: 255, 122, 0;
+  }
+
+  html[accent-color="green"]:root {
+    --accent-color: 0, 186, 124;
+  }
+}
