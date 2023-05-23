@@ -44,6 +44,10 @@ export default {
             DEFAULT: "rgb(231, 233, 234)",
             2: "rgb(113, 118, 123)",
           },
+          border: {
+            DEFAULT: "rgb(47, 51, 54)",
+            2: "rgb(83, 100, 113)",
+          },
         },
         dim: {
           DEFAULT: "rgb(21, 32, 43)",
@@ -73,6 +77,14 @@ export default {
       },
       screens: {
         xs: "500px",
+      },
+      boxShadow: {
+        "light-sh":
+          "rgba(101, 119, 134, 0.2) 0px 0px 15px, rgba(101, 119, 134, 0.15) 0px 0px 3px 1px",
+        "dark-sh":
+          "rgba(255, 255, 255, 0.2) 0px 0px 15px, rgba(255, 255, 255, 0.15) 0px 0px 3px 1px",
+        "dim-sh":
+          "rgba(136, 153, 166, 0.2) 0px 0px 15px, rgba(136, 153, 166, 0.15) 0px 0px 3px 1px",
       },
     },
   },
