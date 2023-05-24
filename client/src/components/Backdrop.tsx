@@ -1,23 +1,18 @@
-import { ReactNode } from "react";
+import { PropsWithChildren } from "react";
 
-interface BackdropPropType {
+interface Props extends PropsWithChildren {
   onClick: () => void;
-  children: ReactNode;
   transparent?: boolean;
 }
 
-const Backdrop = ({
-  onClick,
-  children,
-  transparent = false,
-}: BackdropPropType) => {
+const Backdrop = ({ onClick, children, transparent = false }: Props) => {
   return (
     <div
       onClick={onClick}
-      className={`fixed inset-0 z-50 ${
+      className={`fixed inset-0 z-40 ${
         transparent
           ? "bg-transparent"
-          : "bg-light-hover-2/10 dim:bg-dim-hover-2/10 dark:bg-dark-hover-2/10"
+          : "bg-light-hover-2/20 dim:bg-dim-hover/10 dark:bg-dark-hover/20"
       }`}
     >
       <div onClick={e => e.stopPropagation()}>{children}</div>
