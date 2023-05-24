@@ -29,13 +29,15 @@ const Sidebar = ({ settingModal, toggleModal }: ModalProps) => {
             active ? <RiSearchFill size={26} /> : <RiSearchLine size={26} />
           }
         </NavLink>
-        <NavLink to={`#`} text="Settings" className="order-7">
+        <div onClick={toggleModal} className="order-4">
+        <NavLink to={`#`} text="Settings">
           {settingModal ? (
             <IoSettingsSharp size={26} />
-          ) : (
-            <IoSettingsOutline size={26} onClick={toggleModal} />
-          )}
+            ) : (
+              <IoSettingsOutline size={26} />
+              )}
         </NavLink>
+        </div>
         {user && (
           <>
             <NavLink to="/home" className="order-1" text="Home">
@@ -45,7 +47,7 @@ const Sidebar = ({ settingModal, toggleModal }: ModalProps) => {
             </NavLink>
             <NavLink
               to={`/${user.username ?? ""}`}
-              className="order-6"
+              className="order-3"
               text="Profile"
             >
               {active =>
