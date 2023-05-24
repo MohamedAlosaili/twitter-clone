@@ -18,7 +18,7 @@ const Color = ({ color, selected, colorName, changeColor }: Props) => (
         type="radio"
         name="color"
         className="hidden"
-        onClick={() => changeColor(colorName)}
+        onChange={() => changeColor(colorName)}
         checked={selected}
       />
       {selected && <GoCheck size={30} className="text-white" />}
