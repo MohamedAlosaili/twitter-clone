@@ -24,9 +24,9 @@ const Avatar = ({
       alt={`${username} avatar`}
       className={`aspect-square ${className}`}
     />
-    {/* {layer && (
+    {layer && (
       <div className="absolute inset-0 bg-black opacity-0 transition-opacity hover:opacity-25"></div>
-    )} */}
+    )}
   </div>
 );
 
