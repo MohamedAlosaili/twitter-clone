@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 
 import Color from "./Color";
 import Modal, { ModalProps } from "components/Modal";
-import { Theme, getStoredPrefer, setUserPrefer } from "utils/userPreference";
+import { Theme, getStoredPrefer, storeUserPrefer } from "utils/userPreference";
 import BackgroundColor from "./BackgroundColor";
 
 const accent = {
@@ -19,12 +19,12 @@ const SettingsModal = ({ close }: ModalProps) => {
 
   const changeColor = (colorName: Theme["accent"]) => {
     setTheme(prev => ({ ...prev, accent: colorName }));
-    setUserPrefer({ ...theme, accent: colorName });
+    storeUserPrefer({ ...theme, accent: colorName });
   };
 
   const changeBgColor = (mode: Theme["mode"]) => {
     setTheme(prev => ({ ...prev, mode }));
-    setUserPrefer({ ...theme, mode });
+    storeUserPrefer({ ...theme, mode });
   };
 
   return (
